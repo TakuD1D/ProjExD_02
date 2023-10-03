@@ -2,16 +2,13 @@ import sys
 import pygame as pg
 import random
 
-
 WIDTH, HEIGHT = 1600, 900  # 1600, 900
-
 delta = {  # 移動量の辞書
     pg.K_UP: (0, -5),
     pg.K_DOWN: (0, 5),
     pg.K_LEFT: (-5, 0),
     pg.K_RIGHT: (5, 0),
 }
-
 
 """ 画面外判定 """
 def check_bound(img_rect: pg.Rect) -> tuple:
@@ -29,8 +26,6 @@ def check_bound(img_rect: pg.Rect) -> tuple:
     if img_rect.top < 0 or HEIGHT < img_rect.bottom:
         height_check = False
     return width_check, height_check
-    
-
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -58,23 +53,23 @@ def main():
         
     }
 
-    
-
     """ 爆弾サークル """
-    bb_imgs = []
-    for r in range(1, 11):
-        enn = pg.Surface((20*r, 20*r))
-        pg.draw.circle(enn, (255, 0, 0), (10*r, 10*r), 10*r)
-        enn.set_colorkey((0, 0, 0))
-        bb_imgs.append(enn)
-      # 透明化のためのset_colorkey
+    # bb_imgs = []
+    # for r in range(1, 11):
+    #     enn = pg.Surface((20*r, 20*r))
+    #     pg.draw.circle(enn, (255, 0, 0), (10*r, 10*r), 10*r)
+    #     enn.set_colorkey((0, 0, 0))
+    #     bb_imgs.append(enn)
+    #   # 透明化のためのset_colorkey
+    
+    enn = pg.Surface((20, 20))
+    pg.draw.circle(enn, (255, 0, 0), (10, 10), 10)
+    enn.set_colorkey((0, 0, 0))
     img_baku = enn.get_rect()
     x, y = random.randint(0, WIDTH), random.randint(0, HEIGHT)
     img_baku.center = (x, y)
     vx, vy = +5, +5  # 爆弾移動量
     accs = [a for a in range(1,11)]
-    
-
     """ 設定 """
     clock = pg.time.Clock()
     tmr = 0
@@ -90,7 +85,6 @@ def main():
 
         """ 背景画のblit """
         screen.blit(bg_img, [0, 0])
-
         """" キーを取得してこうかとんを動かす """
         key_lst = pg.key.get_pressed()
         sum_move = [0, 0]
@@ -108,21 +102,20 @@ def main():
         screen.blit(kk_img, kk_rect)  # 900, 400
 
         """爆弾"""
-        avx, avy = vx*accs[min(tmr//500, 9)], vy*accs[min(tmr//500, 9)]
-        bb_img = bb_imgs[min(tmr//500, 9)]
-        img_baku.move_ip(avx, avy)
+        # avx, avy = vx*accs[min(tmr//500, 9)], vy*accs[min(tmr//500, 9)]
+        # bb_img = bb_imgs[min(tmr//500, 9)]
+        img_baku.move_ip(vx, vy)
         yoko, tate = check_bound(img_baku)
         if not yoko:  # 横方向はみ出し
             vx *= -1
         if not tate: # 縦方向はみ出し
             vy *= -1
-        screen.blit(bb_img, img_baku)  # enn-> 円 img_baku->座標を設定
+        screen.blit(enn, img_baku)  # enn-> 円 img_baku->座標を設定
 
         """ 設定 """
         pg.display.update()
         tmr += 1
         clock.tick(50)
-
 
 if __name__ == "__main__":
     pg.init()
