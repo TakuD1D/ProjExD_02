@@ -3,7 +3,7 @@ import pygame as pg
 import random
 
 
-WIDTH, HEIGHT = 800, 600 # 1600, 900
+WIDTH, HEIGHT = 1600, 900 # 1600, 900
 
 
 def main():
@@ -25,18 +25,20 @@ def main():
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
     clock = pg.time.Clock()
     tmr = 0
+    vx, vy = 5, 5
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
 
         screen.blit(bg_img, [0, 0])
-        screen.blit(kk_img, [450, 100]) # 900, 400
+        screen.blit(kk_img, [900, 400]) # 900, 400
+        img_baku.move_ip(vx, vy)
         # enn-> 円 img_baku->座標を設定
         screen.blit(enn, img_baku)
         pg.display.update()
         tmr += 1
-        clock.tick(10)
+        clock.tick(50)
 
 
 if __name__ == "__main__":
