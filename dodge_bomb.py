@@ -50,7 +50,6 @@ def main():
         (-5, 5) : pg.transform.rotozoom(kk_img, 45, 1.0),
         (-5, 0) : pg.transform.rotozoom(kk_img, 0, 1.0),
         (-5, -5) : pg.transform.rotozoom(kk_img, -45, 1.0),
-        
     }
 
     """ 爆弾サークル """
