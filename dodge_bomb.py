@@ -5,16 +5,24 @@ import random
 
 WIDTH, HEIGHT = 1600, 900 # 1600, 900
 
+delta = { # 移動量の辞書
+    pg.K_UP: (0, -5),
+    pg.K_DOWN: (0, 5),
+    pg.K_LEFT: (-5, 0),
+    pg.K_RIGHT: (5, 0),
+}
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
+    
     # 背景画
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
+    
     # こうかとん画
     kk_img = pg.image.load("ex02/fig/3.png") 
-    # 爆弾サークル
     
+    """ 爆弾サークル """
     enn = pg.Surface((20, 20))
     pg.draw.circle(enn, (255, 0, 0), (10, 10), 10)
     enn.set_colorkey((0, 0, 0)) # 透明化のためのset_colorkey
@@ -22,20 +30,36 @@ def main():
     img_baku = enn.get_rect()
     x, y = random.randint(0,WIDTH), random.randint(0,HEIGHT)
     img_baku.center = x, y
+    
+    """こうかとん Rect"""
+    kk_rect = kk_img.get_rect()
+    kk_rect.center = (900, 400)
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    """ 設定 """
     clock = pg.time.Clock()
     tmr = 0
-    vx, vy = 5, 5
+    vx, vy = 5, 5 # 爆弾移動量
+    
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-
+            
+        """ 背景画のblit """
         screen.blit(bg_img, [0, 0])
-        screen.blit(kk_img, [900, 400]) # 900, 400
+            
+        """" キーを取得してこうかとんを動かす """
+        key_lst = pg.key.get_pressed()
+        sum_move = [0, 0]
+        for key,value in delta.items():
+            if key_lst[key]:
+                sum_move[0] += value[0] # 横方向
+                sum_move[1] += value[1] # 縦方向
+        kk_rect.move_ip(sum_move[0], sum_move[1])
+        screen.blit(kk_img, kk_rect) # 900, 400
+        """爆弾"""
         img_baku.move_ip(vx, vy)
-        # enn-> 円 img_baku->座標を設定
-        screen.blit(enn, img_baku)
+        screen.blit(enn, img_baku) # enn-> 円 img_baku->座標を設定
         pg.display.update()
         tmr += 1
         clock.tick(50)
